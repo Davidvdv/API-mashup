@@ -1,10 +1,3 @@
-/*
-
-$('.video img').live('click', function(){
-	$('#video-details').empty();
-});*/
-
-
 /* App-class
  * Songkick.com API-key: Ap6UKNWuYTXt70qi
  * @desc API-mashup of Songkick.com API and YouTube Data API.
@@ -29,13 +22,18 @@ App.prototype.findArtistInfo = function(artistName) {
 			apikey: app.APIkey 
 		}, 
 		function(artistsData) {
-			app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
-			app.findPastConcerts(artistsData.resultsPage.results.artist[0].id);
-			
-			app.artistInfo = artistsData.resultsPage.results.artist[0];
-			
-			// Show the displayName on the screen.
-			$('#content').prepend('<h1>'+artistsData.resultsPage.results.artist[0].displayName+'</h1>');
+			if(artistsData.resultsPage.totalEntries > 0) {
+				app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
+				app.findPastConcerts(artistsData.resultsPage.results.artist[0].id);
+				
+				app.artistInfo = artistsData.resultsPage.results.artist[0];			
+				
+				// Show the displayName on the screen.
+				$('#content').prepend('<h1>'+artistsData.resultsPage.results.artist[0].displayName+'</h1>');
+			} else {
+				alert('The artist '+artistName+' is not found!');
+				window.location.reload();
+			}
 	});
 }
 
@@ -47,9 +45,15 @@ App.prototype.findUpcomingConcerts = function(artistId) {
 			apikey: app.APIkey
 		},
 		function(upcoming) {
-			$.each(upcoming.resultsPage.results.event, function(i, v) {
-				$('#upcoming-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
-			});
+			if(upcoming.resultsPage.totalEntries > 0) {
+				$.each(upcoming.resultsPage.results.event, function(i, v) {
+					$('#upcoming-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
+				});
+			}
+			else {
+				alert(app.artistInfo.displayName+' has no upcoming concerts!');
+				window.location.reload();
+			}
 		}
 	);
 }
@@ -59,34 +63,28 @@ App.prototype.findPastConcerts = function(artistId) {
 	
 	$.getJSON('http://api.songkick.com/api/3.0/artists/'+artistId+'/gigography.json',
 		{
-			apikey: app.APIkey
+			apikey: app.APIkey,
 		},
-		function(past) {
-			console.log(past);
-			
-			// Reverse the array to get the latest gigs first.
-			var recentConcerts = past.resultsPage.results.event.reverse();
-			$.each(recentConcerts, function(i, v) {
+		function(past) {			
+			var pastConcerts = past.resultsPage.results.event.reverse();
+			$.each( pastConcerts, function(i, v) {
 				$('#past-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
 			});
 		}
 	);
-	
-	$('#past-concerts tbody tr td').live('click', function() {
-		app.getVideos(app.artistInfo.displayName);
-	})
 }
 
-App.prototype.getVideos = function(artistName) {
-	app = this;
+App.prototype.getVideos = function() {
+	app = this; // Reference to App.
 	
-	$.getJSON('https://gdata.youtube.com/feeds/api/videos?q='+artistName+'&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
-		function(d) {
-			console.log(d);
-			$.each(d.feed.entry, function(){
+	$.getJSON(
+		'https://gdata.youtube.com/feeds/api/videos?q='+app.artistName+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
+		function(videos) {
+			console.log(videos);
+			$.each(videos.feed.entry, function(){
 				var videoImage = this.media$group.media$thumbnail[2].url;
 				var videoTitle = this.media$group.media$title.$t;
-				$('#past-concerts-videos').append('<h3>'+videoTitle+'</h3><img src="'+videoImage+'" />');
+				$('#videos').append('<h3>'+videoTitle+'</h3><img src="'+videoImage+'" />');
 			});
 	});
 }
