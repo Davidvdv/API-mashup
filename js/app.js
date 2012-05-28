@@ -32,8 +32,8 @@ App.prototype.findArtistInfo = function(artistName) {
 				// Show the displayName on the screen.
 				$('#content').prepend('<h1>'+artistsData.resultsPage.results.artist[0].displayName+'</h1>');
 			} else {
-				alert('The artist '+artistName+' is not found!');
-				window.location.reload();
+				if(confirm('The artist '+artistName+' is not found! Would you like to retry?')) window.location.reload();
+				else alert('Ah well. Have fun staring at a blank page then ;)');
 			}
 	});
 }
@@ -52,8 +52,7 @@ App.prototype.findUpcomingConcerts = function(artistId) {
 				});
 			}
 			else {
-				alert(app.artistInfo.displayName+' has no upcoming concerts!');
-				window.location.reload();
+				$('#upcoming-concerts tbody').append('<tr><td colspan="2">No upcoming concerts soon of '+app.artistInfo.displayName+'</td></tr>');
 			}
 		}
 	);
@@ -64,14 +63,27 @@ App.prototype.findPastConcerts = function(artistId) {
 	
 	$.getJSON('http://api.songkick.com/api/3.0/artists/'+artistId+'/gigography.json',
 		{
-			apikey: app.APIkey,
+			apikey: app.APIkey
 		},
-		function(past) {			
-			$.each(past.resultsPage.results.event, function(i, v) {
-				$('#past-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
-			});
-		}
-	);
+		function(past) {
+			console.log(past);
+			
+			var lastPage = Math.ceil(past.resultsPage.totalEntries/50);
+			console.log(lastPage);
+			
+			$.getJSON('http://api.songkick.com/api/3.0/artists/'+artistId+'/gigography.json',
+				{
+					apikey: app.APIkey,
+					page: lastPage
+				},
+				function(concerts) {
+					var lastConcerts = concerts.resultsPage.results.event.reverse();			
+					$.each(lastConcerts, function(i, v) {
+						$('#past-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
+					});
+				}
+			);
+		});
 }
 
 App.prototype.findVideos = function(artistName) {

@@ -15,7 +15,6 @@ $(document).ready(function() {
 		
 		// Fetch alot of data from the given artist the user requested.
 		app.findArtistInfo($('#artist-search').val());
-		//app.getVideos('Tycho');
 		
 		// Fade the content in.
 		$('#content').fadeIn();
