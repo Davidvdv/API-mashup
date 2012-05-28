@@ -1,19 +1,3 @@
-/*
-App.prototype.getTT = function() {
-	app = this;
-	
-	$.getJSON('http://api.twitter.com/1/trends/daily.json', {exclude: 'hashtags'} , function(data) {
-		
-		$.each(data.trends, function( date, trends ) {
-            console.log(date);
-            $.each(trends, function( i, trend ) {
-                console.log(trend);
-            });
-        });
-	});
-	
-}
-
 /*$.getJSON('https://gdata.youtube.com/feeds/api/videos?q=rotterdam&orderby=published&start-index=1&max-results=30&alt=json&v=2',
 	function(d) {
 		$.each(d.feed.entry, function(){
@@ -29,33 +13,70 @@ $('.video img').live('click', function(){
 });*/
 
 
-/* App-function
+/* App-class
  * Songkick.com API-key: Ap6UKNWuYTXt70qi
  * @desc API-mashup of Songkick.com API and YouTube Data API.
  * @param artistName (The searched name of an artist.)
  */
-function app(artistName) {
+function App() {
 	
-	var APIkey = 'Ap6UKNWuYTXt70qi';
+	// The API-key I recieved from Songkick.com
+	this.APIkey = 'Ap6UKNWuYTXt70qi';
+	
+	// Data about an artist which is useful for other methods.
+	this.artistInfo = null
+}
 
+App.prototype.findArtistInfo = function(artistName) {
+	app = this; // Reference to App.
+	
+	// Get info of an requested artist.
 	$.getJSON('http://api.songkick.com/api/3.0/search/artists.json', 
-		{ 
+		{
 			query: artistName,
-			apikey: APIkey 
+			apikey: app.APIkey 
 		}, 
 		function(artistsData) {
-			console.log(artistsData);
-			var artistId = artistsData.resultsPage.results.artist[0].id;
+			app.artistInfo = artistsData.resultsPage.results.artist[0];
 			
-			$('#artist-info').append(artistsData.resultsPage.results.artist[0].displayName);
+			app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
 			
-			$.getJSON('http://api.songkick.com/api/3.0/artists/'+artistId+'/calendar.json',
-				{
-					apikey: APIkey
-				},
-				function(artist) {
-					//console.log(artist);
-				}
-			);
+			// Show the displayName on the screen.
+			$('#content').prepend('<h1>'+artistsData.resultsPage.results.artist[0].displayName+'</h1>');
 	});
 }
+
+App.prototype.findUpcomingConcerts = function(artistId) {
+	app = this; // Reference to App.
+	
+	$.getJSON('http://api.songkick.com/api/3.0/artists/'+artistId+'/calendar.json',
+		{
+			apikey: app.APIkey
+		},
+		function(upcoming) {
+			$.each(upcoming.resultsPage.results.event, function(i, v) {
+				$('#upcoming-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
+			});
+		}
+	);
+}
+
+App.prototype.findPastConcerts = function(artistId) {
+	app = this; // Reference to App.
+	
+	$.getJSON('http://api.songkick.com/api/3.0/artists/'+artistId+'/calendar.json',
+		{
+			apikey: app.APIkey
+		},
+		function(upcoming) {
+			$.each(upcoming.resultsPage.results.event, function(i, v) {
+				$('#upcoming-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
+			});
+		}
+	);
+}
+
+App.prototype.getVideos = function() {
+	app = this;
+}
+

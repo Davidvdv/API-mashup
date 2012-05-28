@@ -33,16 +33,47 @@
 								<input type="text" placeholder="Type here the artist name" id="artist-search" />
 						</fieldset>
 					</form>
-					<div id="before-search">
+					<div id="content">
 						<ul class="nav nav-tabs">
-							<li><a href="#artist-info" data-toggle="tab">Artist</a></li>
-							<li><a href="#concerts" data-toggle="tab">Concerts</a></li>
+							<li class="active"><a href="#upcoming-concerts" data-toggle="tab">Upcoming concerts</a></li>
+							<li><a href="#past-concerts" data-toggle="tab">Past concerts</a></li>
 							<li><a href="#videos" data-toggle="tab">Videos</a></li>
 							<li><a href="#tweets" data-toggle="tab">Tweets</a></li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane active" id="artist-info"></div>
-							<div class="tab-pane" id="concerts"></div>
+							<div class="tab-pane" id="past-concerts">
+								<div class="row">
+									<div class="span6">
+										<table class="table table-striped">
+											<thead>
+												<th>Where?</th>
+												<th>Type</th>
+											</thead>
+											<tbody>
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane active" id="upcoming-concerts">
+								<div class="row">
+									<div class="span6">
+										<table class="table table-striped">
+											<thead>
+												<th>Where?</th>
+												<th>Type</th>
+											</thead>
+											<tbody>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="span6">
+										
+									</div>
+								</div>
+							</div>
 							<div class="tab-pane" id="videos"></div>
 							<div class="tab-pane" id="tweets"></div>
 						</div>
