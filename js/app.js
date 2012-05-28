@@ -25,6 +25,7 @@ App.prototype.findArtistInfo = function(artistName) {
 			if(artistsData.resultsPage.totalEntries > 0) {
 				app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findPastConcerts(artistsData.resultsPage.results.artist[0].id);
+				app.findVideos(artistsData.resultsPage.results.artist[0].displayName);
 				
 				app.artistInfo = artistsData.resultsPage.results.artist[0];			
 				
@@ -66,25 +67,26 @@ App.prototype.findPastConcerts = function(artistId) {
 			apikey: app.APIkey,
 		},
 		function(past) {			
-			var pastConcerts = past.resultsPage.results.event.reverse();
-			$.each( pastConcerts, function(i, v) {
+			$.each(past.resultsPage.results.event, function(i, v) {
 				$('#past-concerts tbody').append('<tr><td>'+v.displayName+'</td><td>'+v.type+'</td></tr>');
 			});
 		}
 	);
 }
 
-App.prototype.getVideos = function() {
+App.prototype.findVideos = function(artistName) {
 	app = this; // Reference to App.
 	
 	$.getJSON(
-		'https://gdata.youtube.com/feeds/api/videos?q='+app.artistName+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
+		'https://gdata.youtube.com/feeds/api/videos?q='+artistName+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
 		function(videos) {
-			console.log(videos);
 			$.each(videos.feed.entry, function(){
+				console.log(this);
 				var videoImage = this.media$group.media$thumbnail[2].url;
 				var videoTitle = this.media$group.media$title.$t;
-				$('#videos').append('<h3>'+videoTitle+'</h3><img src="'+videoImage+'" />');
+				var videoId = this.media$group.yt$videoid.$t;
+				
+				$('#video-results').append('<h3>'+videoTitle+'</h3><a href="http://www.youtube.com/watch?v='+videoId+'"><img src="'+videoImage+'" /></a>');
 			});
 	});
 }
