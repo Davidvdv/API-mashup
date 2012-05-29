@@ -9,6 +9,8 @@ $(document).ready(function() {
 	// Handling the form submit event.
 	$('#form-artist-search').submit(function() {
 		$('#content').hide();
+		$('#upcoming-concerts tbody'). empty();
+		$('#video-results').empty();
 		
 		// Create an instance of App.
 		var app = new App();
