@@ -23,6 +23,12 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	$('#past-concerts table tbody tr a').live('click', function(e) {
+		e.preventDefault();
+		$('#videos-concerts').empty();
+		app.findVideosOfConcerts($(this).attr('data-search'));
+	});
+	
 	// Handling the tabs.
 	$('#info-tabs a').click(function (e) {
 		e.preventDefault();
