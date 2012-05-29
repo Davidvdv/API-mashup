@@ -20,21 +20,23 @@ App.prototype.findArtistInfo = function(artistName) {
 	$.getJSON('http://api.songkick.com/api/3.0/search/artists.json', 
 		{
 			query: artistName,
-			apikey: app.APIkey 
-		}, 
+			apikey: app.APIkey
+		},
 		function(artistsData) {
 			if(artistsData.resultsPage.totalEntries > 0) {
 				app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findPastConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findVideos(artistsData.resultsPage.results.artist[0].displayName);
-								
+				
+				
+				
 				// Show the displayName on the screen.
 				$('#content h1').html(artistsData.resultsPage.results.artist[0].displayName);
 			} else {
 				if(confirm('The artist '+artistName+' is not found! Would you like to retry?')) window.location.reload();
 				else alert('Ah well. Have fun staring at a blank page then ;)');
 			}
-	});
+		});
 }
 
 App.prototype.findUpcomingConcerts = function(artistId) {
@@ -51,10 +53,9 @@ App.prototype.findUpcomingConcerts = function(artistId) {
 				});
 			}
 			else {
-				$('#upcoming-concerts tbody').append('<tr><td colspan="2">No upcoming concerts soon of '+app.artistInfo.displayName+'</td></tr>');
+				$('#upcoming-concerts tbody').append('<tr><td colspan="2">No upcoming concerts soon!</td></tr>');
 			}
-		}
-	);
+		});
 }
 
 App.prototype.findPastConcerts = function(artistId) {
@@ -91,8 +92,7 @@ App.prototype.findPastConcerts = function(artistId) {
 App.prototype.findVideosOfConcerts = function(search) {
 	app = this; // Reference to App.
 	
-	$.getJSON(
-		'https://gdata.youtube.com/feeds/api/videos?q='+search+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
+	$.getJSON('https://gdata.youtube.com/feeds/api/videos?q='+search+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
 		function(videos) {
 			$.each(videos.feed.entry, function(){
 				var videoImage = this.media$group.media$thumbnail[2].url;
@@ -107,9 +107,9 @@ App.prototype.findVideosOfConcerts = function(search) {
 App.prototype.findVideos = function(artistName) {
 	app = this; // Reference to App.
 	
-	$.getJSON(
+	$.ajax({url:
 		'https://gdata.youtube.com/feeds/api/videos?q='+artistName+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
-		function(videos) {
+		success: function(videos) {
 			$.each(videos.feed.entry, function(){
 				var videoImage = this.media$group.media$thumbnail[2].url;
 				var videoTitle = this.media$group.media$title.$t;
@@ -117,5 +117,5 @@ App.prototype.findVideos = function(artistName) {
 				
 				$('#video-results').append('<h3>'+videoTitle+'</h3><a href="http://www.youtube.com/watch?v='+videoId+'"><img src="'+videoImage+'" /></a>');
 			});
-	});
+	}});
 }
