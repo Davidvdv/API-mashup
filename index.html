@@ -10,6 +10,8 @@
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script src="bootstrap/js/bootstrap.min.js"></script>
+		
+		<script src="js/facebook.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/main.js"></script>
 
@@ -39,6 +41,7 @@
 							<li class="active"><a href="#upcoming-concerts" data-toggle="tab">Upcoming concerts</a></li>
 							<li><a href="#past-concerts" data-toggle="tab">Past concerts</a></li>
 							<li><a href="#videos" data-toggle="tab">Videos</a></li>
+							<li><a href="#facebook" data-toggle="tab">Facebook</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="upcoming-concerts">
@@ -81,11 +84,19 @@
 									</div>
 								</div>
 							</div>
+							<div class="tab-pane" id="facebook">
+								<div class="row">
+									<div class="span12">
+										<div id="fb-root"></div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<footer class="footer">Created by David van de Vondervoort - <a href="https://github.com/Davidvdv/API-mashup">https://github.com/Davidvdv/API-mashup</a></footer>
 		</div>
+		<fb:login-button size="large" scope="user_likes" id="FBButton"></fb:login-button>
 	</body>
 </html>

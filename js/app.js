@@ -11,6 +11,8 @@ function App() {
 	// Data about an artist which is useful for other methods.
 	this.artistInfo = null
 	this.pastConcertsInfo = null;
+	
+	initFacebook();
 }
 
 App.prototype.findArtistInfo = function(artistName) {
@@ -27,8 +29,6 @@ App.prototype.findArtistInfo = function(artistName) {
 				app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findPastConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findVideos(artistsData.resultsPage.results.artist[0].displayName);
-				
-				
 				
 				// Show the displayName on the screen.
 				$('#content h1').html(artistsData.resultsPage.results.artist[0].displayName);
@@ -78,6 +78,9 @@ App.prototype.findPastConcerts = function(artistId) {
 					var lastConcerts = concerts.resultsPage.results.event.reverse();			
 					$.each(lastConcerts, function(i, v) {
 						if(v.series != undefined) {
+							console.log(v.displayName);
+							console.log(v.series.displayName);
+							
 							$('#past-concerts tbody').append('<tr><td><a href="#" data-search="'+v.displayName+' '+v.series.displayName+'">'+v.displayName+'</a></td><td>'+v.type+'</td></tr>');
 						}
 						else {
@@ -107,9 +110,8 @@ App.prototype.findVideosOfConcerts = function(search) {
 App.prototype.findVideos = function(artistName) {
 	app = this; // Reference to App.
 	
-	$.ajax({url:
-		'https://gdata.youtube.com/feeds/api/videos?q='+artistName+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
-		success: function(videos) {
+	$.getJSON('https://gdata.youtube.com/feeds/api/videos?q='+artistName+' live&orderby=relevance&start-index=1&max-results=10&alt=json&v=2',
+		function(videos) {
 			$.each(videos.feed.entry, function(){
 				var videoImage = this.media$group.media$thumbnail[2].url;
 				var videoTitle = this.media$group.media$title.$t;
@@ -117,5 +119,5 @@ App.prototype.findVideos = function(artistName) {
 				
 				$('#video-results').append('<h3>'+videoTitle+'</h3><a href="http://www.youtube.com/watch?v='+videoId+'"><img src="'+videoImage+'" /></a>');
 			});
-	}});
+	});
 }

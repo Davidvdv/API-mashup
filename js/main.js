@@ -1,5 +1,4 @@
-$(document).ready(function() {
-	
+$(document).ready(function() {	
 	// Set the focus by default to the input field.
 	$('#artist-search').focus();
 	
@@ -7,9 +6,12 @@ $(document).ready(function() {
 	$('#content').hide();
 	
 	// Handling the form submit event.
-	$('#form-artist-search').submit(function() {
+	$('#form-artist-search').submit(function(e) {
+		e.preventDefault();
+		
 		$('#content').hide();
-		$('#upcoming-concerts tbody'). empty();
+		$('#upcoming-concerts tbody').empty();
+		$('#past-concerts tbody').empty();
 		$('#video-results').empty();
 		
 		// Create an instance of App.
