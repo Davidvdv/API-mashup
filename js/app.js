@@ -11,7 +11,8 @@ function App() {
 	// Data which is useful for other methods.
 	this.artistName = null;
 	
-	initFacebook();
+	// Initialize Facebook Javascript SDK
+	initFacebook();	
 }
 
 App.prototype.findArtistInfo = function(artistName) {
@@ -56,7 +57,8 @@ App.prototype.findUpcomingConcerts = function(artistId) {
 			else {
 				$('#upcoming-concerts tbody').append('<tr><td colspan="2">No upcoming concerts soon!</td></tr>');
 			}
-		});
+		}
+	);
 }
 
 App.prototype.findPastConcerts = function(artistId) {

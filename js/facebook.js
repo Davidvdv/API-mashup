@@ -11,18 +11,29 @@ function initFacebook() {
 		FB.getLoginStatus(function(response) {
 			if(response.status == 'connected') {
 				$('#FBButton').hide();
+				
+				FB.api('/me', function(response) {
+					$('#facebook').append('<h4>'+response.first_name+' '+response.last_name+'</h4>');
+				});
+				
 				/*
 				// To remove permissions.
 				FB.api('/'+response.authResponse.userID+'/permissions', 'delete', function(r){
 					console.log(r);
 				});*/
 				
-				FB.api('/me/likes', function(response) {
-					if(response.category == 'music') {
-						console.log(response);
-					}
-					
+				$('#facebook').append('<img class="pull-left" src="https://graph.facebook.com/'+response.authResponse.userID+'/picture" alt="Profile pic" />');
+				
+				$.getJSON('https://graph.facebook.com/me/music?access_token='+response.authResponse.accessToken, function(d) {
+					$('#facebook').append('<p>Music likes op Facebook <span class="badge badge-important">'+d.data.length+'</span></p>');
+					$.each(d.data, function() {
+						$('#facebook-artists tbody').append('<tr><td>'+this.name+'</td></tr>');
+					});
 				});
+								
+				/*FB.api('/me/likes', function(response) {
+					console.log(response);
+				});*/
 			}
 		});
 		

@@ -5,6 +5,9 @@ $(document).ready(function() {
 	// Hide the content part when DOM is ready.
 	$('#content').hide();
 	
+	// Create an instance of App.
+	var app = new App();
+	
 	// Handling the form submit event.
 	$('#form-artist-search').submit(function(e) {
 		e.preventDefault();
@@ -13,9 +16,6 @@ $(document).ready(function() {
 		$('#upcoming-concerts tbody').empty();
 		$('#past-concerts tbody').empty();
 		$('#video-results').empty();
-		
-		// Create an instance of App.
-		var app = new App();
 		
 		// Fetch alot of data from the given artist the user requested.
 		app.findArtistInfo($('#artist-search').val());
@@ -27,6 +27,7 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	// Handling the click on past events.
 	$('#past-concerts table tbody tr a').live('click', function(e) {
 		e.preventDefault();
 		$('#videos-concerts').empty();

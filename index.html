@@ -22,12 +22,15 @@
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="#">API-mashup</a>
+					<ul class="nav pull-right">
+						<li><a href="#" id="facebook-popover">Facebook</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="span12">
+				<div class="span8">
 					<form class="well" id="form-artist-search">
 						<legend>Search for an artist</legend>
 						<fieldset>
@@ -35,13 +38,22 @@
 								<input type="text" placeholder="Type here the artist name" id="artist-search" />
 						</fieldset>
 					</form>
-					<div id="content">
+				</div>
+				<div class="span4" id="facebook">
+					<h2>Facebook</h2>
+					<div id="fb-root"></div>
+					<fb:login-button size="large" scope="user_likes" id="FBButton">Connect with Facebook</fb:login-button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<section id="content">
 						<h1></h1>
 						<ul class="nav nav-tabs">
 							<li class="active"><a href="#upcoming-concerts" data-toggle="tab">Upcoming concerts</a></li>
 							<li><a href="#past-concerts" data-toggle="tab">Past concerts</a></li>
 							<li><a href="#videos" data-toggle="tab">Videos</a></li>
-							<li><a href="#facebook" data-toggle="tab">Facebook</a></li>
+							<li><a href="#facebook-artists" data-toggle="tab">Facebook</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane active" id="upcoming-concerts">
@@ -55,7 +67,7 @@
 											<tbody>
 
 											</tbody>
-										</table>										
+										</table>
 									</div>
 								</div>
 							</div>
@@ -84,19 +96,25 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane" id="facebook">
+							<div class="tab-pane" id="facebook-artists">
 								<div class="row">
 									<div class="span12">
-										<div id="fb-root"></div>
+										<table class="table table-striped">
+											<thead>
+												<th>Artist</th>
+											</thead>
+											<tbody>
+
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</section>
 				</div>
 			</div>
 			<footer class="footer">Created by David van de Vondervoort - <a href="https://github.com/Davidvdv/API-mashup">https://github.com/Davidvdv/API-mashup</a></footer>
 		</div>
-		<fb:login-button size="large" scope="user_likes" id="FBButton"></fb:login-button>
 	</body>
 </html>
