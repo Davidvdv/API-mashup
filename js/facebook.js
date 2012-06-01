@@ -18,7 +18,10 @@ function initFacebook() {
 				});*/
 				
 				FB.api('/me/likes', function(response) {
-					console.log(response);
+					if(response.category == 'music') {
+						console.log(response);
+					}
+					
 				});
 			}
 		});

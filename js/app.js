@@ -8,9 +8,8 @@ function App() {
 	// The API-key I recieved from Songkick.com
 	this.APIkey = 'Ap6UKNWuYTXt70qi';
 	
-	// Data about an artist which is useful for other methods.
-	this.artistInfo = null
-	this.pastConcertsInfo = null;
+	// Data which is useful for other methods.
+	this.artistName = null;
 	
 	initFacebook();
 }
@@ -29,6 +28,8 @@ App.prototype.findArtistInfo = function(artistName) {
 				app.findUpcomingConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findPastConcerts(artistsData.resultsPage.results.artist[0].id);
 				app.findVideos(artistsData.resultsPage.results.artist[0].displayName);
+				
+				app.artistName = artistsData.resultsPage.results.artist[0].displayName;
 				
 				// Show the displayName on the screen.
 				$('#content h1').html(artistsData.resultsPage.results.artist[0].displayName);
@@ -77,14 +78,14 @@ App.prototype.findPastConcerts = function(artistId) {
 				function(concerts) {
 					var lastConcerts = concerts.resultsPage.results.event.reverse();			
 					$.each(lastConcerts, function(i, v) {
+						console.log(v);
+						
 						if(v.series != undefined) {
-							console.log(v.displayName);
-							console.log(v.series.displayName);
 							
-							$('#past-concerts tbody').append('<tr><td><a href="#" data-search="'+v.displayName+' '+v.series.displayName+'">'+v.displayName+'</a></td><td>'+v.type+'</td></tr>');
+							$('#past-concerts tbody').append('<tr><td><a href="#" data-search="'+app.artistName+' '+v.series.displayName+'">'+v.displayName+'</a></td><td>'+v.type+'</td></tr>');
 						}
 						else {
-							$('#past-concerts tbody').append('<tr><td><a href="#" data-search="'+v.displayName+' '+v.venue.displayName+'">'+v.displayName+'</a></td><td>'+v.type+'</td></tr>');
+							$('#past-concerts tbody').append('<tr><td><a href="#" data-search="'+app.artistName+' '+v.venue.displayName+'">'+v.displayName+'</a></td><td>'+v.type+'</td></tr>');
 						}
 					});					
 				}
